@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { ElevatorState, EmergencyType, EscapeRouteStatus } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
+import { soundFX } from '../lib/audio';
 
 interface EmergencyControlPageProps {
   state: ElevatorState;
@@ -149,18 +150,26 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
           <StatusBadge status={state.status} size="md" pulse={isEmergency} />
           {isEmergency ? (
             <button
+              id="clear-emergency-btn"
               type="button"
-              onClick={onClearEmergency}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer transition-all"
+              onClick={() => {
+                soundFX.playSafeChime();
+                onClearEmergency();
+              }}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-lg text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer transition-all"
             >
               <CheckCircle2 className="w-4 h-4" />
               Resolve / Clear Emergency
             </button>
           ) : (
             <button
+              id="trigger-emergency-btn"
               type="button"
-              onClick={() => onStartEmergency(selectedEmergencyType)}
-              className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-lg text-xs font-mono flex items-center gap-2 shadow-lg shadow-rose-950/50 cursor-pointer transition-all"
+              onClick={() => {
+                soundFX.playClick();
+                onStartEmergency(selectedEmergencyType);
+              }}
+              className="px-4 py-2 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold rounded-lg text-xs font-mono flex items-center gap-2 shadow-lg shadow-rose-950/50 cursor-pointer transition-all"
             >
               <Play className="w-4 h-4 fill-current" />
               Trigger Selected Emergency
@@ -168,9 +177,13 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
           )}
 
           <button
+            id="control-reset-sim-btn"
             type="button"
-            onClick={onResetSimulation}
-            className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+            onClick={() => {
+              soundFX.playClick();
+              onResetSimulation();
+            }}
+            className="px-3 py-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
             Reset Sim
@@ -216,9 +229,13 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
 
               <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-end">
                 <button
+                  id={`run-scenario-btn-${sc.id}`}
                   type="button"
-                  onClick={() => onRunScenario(sc.id)}
-                  className="px-3 py-1.5 bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 border border-cyan-500/40 rounded text-xs font-mono font-medium flex items-center gap-1.5 cursor-pointer transition-colors"
+                  onClick={() => {
+                    soundFX.playClick();
+                    onRunScenario(sc.id);
+                  }}
+                  className="px-3 py-1.5 bg-cyan-600/20 hover:bg-cyan-600/40 active:scale-95 text-cyan-300 hover:text-cyan-200 border border-cyan-500/40 rounded text-xs font-mono font-medium flex items-center gap-1.5 cursor-pointer transition-all"
                 >
                   <Play className="w-3 h-3 fill-current" />
                   Run Scenario {sc.id}
@@ -290,10 +307,11 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
+                      soundFX.playClick();
                       setSelectedEmergencyType(et.type);
                       onStartEmergency(et.type);
                     }}
-                    className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+                    className="text-cyan-400 hover:text-cyan-300 active:scale-95 transition-transform flex items-center gap-1 cursor-pointer"
                   >
                     Trigger Now <ArrowRight className="w-3 h-3" />
                   </button>
@@ -326,22 +344,28 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => onSensorOverride({ floorAlignment: true, alignmentOffsetMm: 0 })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ floorAlignment: true, alignmentOffsetMm: 0 });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   state.sensors.floorAlignment
                     ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 ALIGNED (0mm)
               </button>
               <button
                 type="button"
-                onClick={() => onSensorOverride({ floorAlignment: false, alignmentOffsetMm: 480 })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ floorAlignment: false, alignmentOffsetMm: 480 });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   !state.sensors.floorAlignment
                     ? 'bg-rose-500/20 border-rose-400 text-rose-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 MISALIGNED (+480mm)
@@ -356,22 +380,28 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => onSensorOverride({ escapeRouteAvailability: 'AVAILABLE' })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ escapeRouteAvailability: 'AVAILABLE' });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   state.sensors.escapeRouteAvailability === 'AVAILABLE'
                     ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 CLEAR
               </button>
               <button
                 type="button"
-                onClick={() => onSensorOverride({ escapeRouteAvailability: 'BLOCKED_SMOKE' })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ escapeRouteAvailability: 'BLOCKED_SMOKE' });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   state.sensors.escapeRouteAvailability !== 'AVAILABLE'
                     ? 'bg-rose-500/20 border-rose-400 text-rose-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 SMOKE DETECTED
@@ -386,22 +416,28 @@ export const EmergencyControlPage: React.FC<EmergencyControlPageProps> = ({
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => onSensorOverride({ powerStatus: 'MAIN_ACTIVE' })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ powerStatus: 'MAIN_ACTIVE' });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   state.sensors.powerStatus === 'MAIN_ACTIVE'
                     ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 MAIN 480V
               </button>
               <button
                 type="button"
-                onClick={() => onSensorOverride({ powerStatus: 'OUTAGE' })}
-                className={`flex-1 py-1.5 rounded border transition-colors cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onSensorOverride({ powerStatus: 'OUTAGE' });
+                }}
+                className={`flex-1 py-1.5 rounded border active:scale-95 transition-all cursor-pointer ${
                   state.sensors.powerStatus === 'OUTAGE'
                     ? 'bg-rose-500/20 border-rose-400 text-rose-300 font-bold'
-                    : 'bg-slate-900 border-slate-800 text-slate-400'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-300'
                 }`}
               >
                 OUTAGE

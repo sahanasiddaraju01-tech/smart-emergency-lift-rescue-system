@@ -19,6 +19,7 @@ import { DecisionBanner } from '../components/DecisionBanner';
 import { SensorGauges } from '../components/SensorGauges';
 import { ElevatorShaftVisualizer } from '../components/ElevatorShaftVisualizer';
 import { PassengerPanel } from '../components/PassengerPanel';
+import { soundFX } from '../lib/audio';
 
 interface DashboardPageProps {
   state: ElevatorState;
@@ -141,9 +142,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             Simulated Sensor System Telemetry
           </h3>
           <button
+            id="dash-nav-control-btn"
             type="button"
-            onClick={() => onNavigateTab('control')}
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-mono underline cursor-pointer"
+            onClick={() => {
+              soundFX.playClick();
+              onNavigateTab('control');
+            }}
+            className="text-xs text-cyan-400 hover:text-cyan-300 active:scale-95 font-mono underline transition-all cursor-pointer"
           >
             Open Emergency Simulator Controls →
           </button>
@@ -168,9 +173,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               <h3 className="text-sm font-bold text-white tracking-wide">Live System Event Log</h3>
             </div>
             <button
+              id="dash-nav-history-btn"
               type="button"
-              onClick={() => onNavigateTab('history')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 font-mono cursor-pointer"
+              onClick={() => {
+                soundFX.playClick();
+                onNavigateTab('history');
+              }}
+              className="text-xs text-cyan-400 hover:text-cyan-300 active:scale-95 font-mono transition-all cursor-pointer"
             >
               View Full History →
             </button>

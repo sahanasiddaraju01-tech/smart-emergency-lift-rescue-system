@@ -11,6 +11,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { SensorData, EmergencyExitStatus } from '../types';
+import { soundFX } from '../lib/audio';
 
 interface SensorGaugesProps {
   sensors: SensorData;
@@ -152,16 +153,24 @@ export const SensorGauges: React.FC<SensorGaugesProps> = ({ sensors, emergencyEx
             {onSensorOverride && (
               <div className="flex items-center gap-1">
                 <button
+                  id="sensor-passenger-minus-btn"
                   type="button"
-                  onClick={() => onSensorOverride({ passengerCount: Math.max(1, sensors.passengerCount - 1) })}
-                  className="w-5 h-5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs flex items-center justify-center font-mono cursor-pointer"
+                  onClick={() => {
+                    soundFX.playClick();
+                    onSensorOverride({ passengerCount: Math.max(1, sensors.passengerCount - 1) });
+                  }}
+                  className="w-5 h-5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 rounded text-xs flex items-center justify-center font-mono transition-all cursor-pointer"
                 >
                   -
                 </button>
                 <button
+                  id="sensor-passenger-plus-btn"
                   type="button"
-                  onClick={() => onSensorOverride({ passengerCount: Math.min(16, sensors.passengerCount + 1) })}
-                  className="w-5 h-5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs flex items-center justify-center font-mono cursor-pointer"
+                  onClick={() => {
+                    soundFX.playClick();
+                    onSensorOverride({ passengerCount: Math.min(16, sensors.passengerCount + 1) });
+                  }}
+                  className="w-5 h-5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 rounded text-xs flex items-center justify-center font-mono transition-all cursor-pointer"
                 >
                   +
                 </button>

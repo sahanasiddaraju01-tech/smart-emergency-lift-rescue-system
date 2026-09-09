@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
+import { SoftwareSimulationBanner } from './components/SoftwareSimulationBanner';
+import { SafetyLimitationsModal } from './components/SafetyLimitationsModal';
 import { DashboardPage } from './pages/DashboardPage';
 import { SimulationPage } from './pages/SimulationPage';
 import { EmergencyControlPage } from './pages/EmergencyControlPage';
@@ -14,6 +16,7 @@ import {
   EmergencyRecord,
 } from './types';
 import { soundFX } from './lib/audio';
+import { CheckCircle2, RotateCcw } from 'lucide-react';
 
 const DEFAULT_STATE: ElevatorState = {
   id: 'LIFT-ALPHA-01',
@@ -60,6 +63,8 @@ export default function App() {
   const [emergencies, setEmergencies] = useState<EmergencyRecord[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [isSafetyModalOpen, setIsSafetyModalOpen] = useState<boolean>(false);
+  const [resetToast, setResetToast] = useState<boolean>(false);
 
   // Fetch all current state data
   const fetchData = useCallback(async () => {
@@ -164,12 +169,18 @@ export default function App() {
   // 3. Reset Simulation
   const handleResetSimulation = async () => {
     soundFX.playChime(500, 'triangle', 0.2);
+    // Immediately reset client-side clock and state
+    setElapsedSeconds(0);
+    setState(DEFAULT_STATE);
+    setResetToast(true);
+    setTimeout(() => setResetToast(false), 3000);
+
     try {
       const res = await fetch('/api/simulation/reset', { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         setState(data);
-        fetchData();
+        await fetchData();
       }
     } catch (err) {
       console.error('Failed to reset simulation', err);
@@ -293,10 +304,14 @@ export default function App() {
         onTabChange={setActiveTab}
         elevatorStatus={state.status}
         onResetSimulation={handleResetSimulation}
+        onOpenSafetyModal={() => setIsSafetyModalOpen(true)}
       />
 
+      {/* Persistent Mandatory Concept Prototype Label Banner */}
+      <SoftwareSimulationBanner onOpenSafetyModal={() => setIsSafetyModalOpen(true)} />
+
       {/* Main Tab Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8">
         {activeTab === 'dashboard' && (
           <DashboardPage
             state={state}
@@ -345,18 +360,53 @@ export default function App() {
         {activeTab === 'system' && <SystemInfoPage />}
       </main>
 
+      {/* Reset Feedback Floating Toast */}
+      {resetToast && (
+        <div
+          id="reset-simulation-toast"
+          className="fixed bottom-6 right-6 z-50 bg-slate-900 border border-emerald-500/80 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-200"
+        >
+          <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xs font-bold font-mono text-emerald-400">System Reset Completed</div>
+            <div className="text-[11px] text-slate-300">Elevator returned to nominal 2F baseline state.</div>
+          </div>
+        </div>
+      )}
+
+      {/* Safety & Limitations Comprehensive Modal Dialog */}
+      <SafetyLimitationsModal
+        isOpen={isSafetyModalOpen}
+        onClose={() => setIsSafetyModalOpen(false)}
+      />
+
       {/* Footer */}
       <footer className="bg-slate-950 border-t border-slate-900 py-6 px-4 text-xs font-mono text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-center md:text-left">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="text-slate-400">SMART EMERGENCY LIFT RESCUE SYSTEM</span>
-            <span>•</span>
-            <span>Full-Stack Software Simulation Prototype</span>
+            <span className="text-slate-300 font-semibold">SMART EMERGENCY LIFT RESCUE SYSTEM</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-amber-400/90 font-medium">
+              Software Simulation / Concept Prototype — Not connected to real elevator hardware
+            </span>
           </div>
 
-          <div className="text-slate-500 text-center sm:text-right">
-            <span>CSE Student Portfolio • Educational Software Simulation Only</span>
+          <div className="flex items-center gap-4 text-slate-400">
+            <button
+              type="button"
+              onClick={() => {
+                soundFX.playClick();
+                setIsSafetyModalOpen(true);
+              }}
+              className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 transition-colors cursor-pointer active:scale-95"
+            >
+              Safety & Limitations Notice
+            </button>
+            <span>•</span>
+            <span className="text-slate-500">CSE Portfolio Capstone</span>
           </div>
         </div>
       </footer>

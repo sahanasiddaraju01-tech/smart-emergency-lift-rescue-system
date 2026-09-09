@@ -18,22 +18,99 @@ export const SystemInfoPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* 1. Official Safety Disclaimer Banner (Mandatory) */}
-      <div className="bg-rose-950/40 border-2 border-rose-500/80 rounded-xl p-5 shadow-xl">
-        <div className="flex items-start gap-3.5">
-          <div className="p-2.5 bg-rose-900/60 rounded-lg text-rose-300 shrink-0">
-            <ShieldAlert className="w-6 h-6" />
+      <div id="safety-disclaimer-banner" className="bg-rose-950/40 border-2 border-rose-500/80 rounded-xl p-5 sm:p-6 shadow-xl">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-rose-900/60 border border-rose-600/70 rounded-xl text-rose-300 shrink-0">
+            <ShieldAlert className="w-7 h-7" />
           </div>
-          <div className="space-y-1.5">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-rose-300 font-mono">
-              Crucial Safety Disclaimer & Purpose Notice
-            </h3>
-            <p className="text-xs text-rose-200 leading-relaxed font-medium">
-              "This project is a software simulation and educational prototype. It does not control or interface with real elevator hardware or building safety systems. Real elevator safety systems require certified hardware, professional engineering, testing, and regulatory approval."
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-rose-300 font-mono">
+                Crucial Safety Disclaimer & Academic Prototype Purpose
+              </h3>
+              <span className="px-2 py-0.5 rounded bg-rose-900/80 border border-rose-700 text-[10px] font-mono font-bold text-rose-200">
+                Software-Only
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-rose-100 leading-relaxed font-medium">
+              "This project is a software simulation and concept prototype — NOT connected to real elevator hardware or physical building systems. Real elevator emergency safety systems require certified hardware, professional engineering, rigorous testing, and regulatory approval."
             </p>
-            <p className="text-[11px] text-rose-300/80">
-              Created for Computer Science & Engineering (CSE) student portfolio, resume, LinkedIn, and technical GitHub demonstration.
+            <p className="text-[11px] text-rose-300/80 font-mono">
+              Designed as a portfolio capstone demonstration for Computer Science & Engineering (CSE), resume review, technical GitHub exhibition, and algorithmic research.
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* 2. Formal Safety & Limitations Engineering Breakdown */}
+      <div id="safety-limitations-section" className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5 shadow-lg">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="flex items-center gap-2.5">
+            <ShieldAlert className="w-5 h-5 text-amber-400" />
+            <h2 className="text-base font-bold text-white tracking-wide uppercase font-mono">
+              Safety & Limitations: Industry Standards vs. Simulation Scope
+            </h2>
+          </div>
+          <span className="text-xs font-mono text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded border border-amber-700/60">
+            Engineering Reality Check
+          </span>
+        </div>
+
+        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          While this prototype demonstrates the algorithmic logic, sensor thresholding, and state management required for an intelligent dual-door elevator egress system, deploying such a system in the physical world requires compliance with stringent life-safety codes. The table below delineates the software simulation boundaries from mandatory real-world requirements:
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          {/* Pillar 1 */}
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 space-y-2">
+            <div className="flex items-center gap-2 text-amber-400 font-bold font-mono">
+              <Cpu className="w-4 h-4" />
+              <span>1. Certified Safety Hardware (SIL-3)</span>
+            </div>
+            <p className="text-slate-300 text-[12px] leading-relaxed">
+              In real elevators, emergency exit doors cannot be unlocked purely through software. They must incorporate <strong>SIL-3 rated hardware safety relays</strong>, dual-channel fail-safe interlocks with positive-break contacts, and optical infrared light curtains. If power is severed, mechanical fail-safe drop locks prevent doors from opening unless mechanical interlock sills are physically engaged.
+            </p>
+          </div>
+
+          {/* Pillar 2 */}
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 space-y-2">
+            <div className="flex items-center gap-2 text-cyan-400 font-bold font-mono">
+              <Layers className="w-4 h-4" />
+              <span>2. Professional Engineering & Structural Integrity</span>
+            </div>
+            <p className="text-slate-300 text-[12px] leading-relaxed">
+              Cutting a rear emergency door into an elevator cabin alters its structural shear, weight distribution, and sling rigidity. A licensed <strong>Professional Engineer (PE)</strong> must perform Finite Element Analysis (FEA) and dynamic counterweight recalculations. Additionally, the protected egress vestibule must have a minimum <strong>2-hour fire resistance rating</strong> (Class A) with positive-pressure HVAC to prevent smoke ingress.
+            </p>
+          </div>
+
+          {/* Pillar 3 */}
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 space-y-2">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold font-mono">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>3. Rigorous Testing, Commissioning & Inspection</span>
+            </div>
+            <p className="text-slate-300 text-[12px] leading-relaxed">
+              Real installations require dynamic full-load overspeed tests, free-fall safety wedge testing, automated transfer switch (ATS) backup power latency verification, and cross-zoned smoke evacuation air volume testing before any municipal certificate of occupancy is issued.
+            </p>
+          </div>
+
+          {/* Pillar 4 */}
+          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 space-y-2">
+            <div className="flex items-center gap-2 text-purple-400 font-bold font-mono">
+              <GraduationCap className="w-4 h-4" />
+              <span>4. Regulatory Codes & AHJ Jurisdictions</span>
+            </div>
+            <p className="text-slate-300 text-[12px] leading-relaxed">
+              Elevator systems are strictly regulated under <strong>ASME A17.1 / CSA B44</strong> (North America), <strong>EN 81-20/50</strong> (Europe), and <strong>NFPA 101 Life Safety Code</strong>. Any auxiliary exit path requires variance review and written sign-off from the municipal Authority Having Jurisdiction (AHJ) and Chief Fire Marshal.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span className="text-slate-400">
+            System Classification: <strong className="text-cyan-300">Software Logic & Telemetry Simulation Only</strong>
+          </span>
+          <span className="text-emerald-400 font-bold">100% Isolated Sandbox</span>
         </div>
       </div>
 

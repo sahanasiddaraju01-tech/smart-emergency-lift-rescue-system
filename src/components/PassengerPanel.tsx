@@ -114,12 +114,14 @@ export const PassengerPanel: React.FC<PassengerPanelProps> = ({ state, onSOS }) 
 
         <div className="flex items-center gap-2">
           <button
+            id="passenger-voice-toggle-btn"
             type="button"
             onClick={() => {
+              soundFX.playClick();
               setVoiceGuidanceEnabled(!voiceGuidanceEnabled);
               soundFX.isMuted = voiceGuidanceEnabled;
             }}
-            className={`px-3 py-1 rounded-lg border text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`px-3 py-1 rounded-lg border text-xs font-mono flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
               voiceGuidanceEnabled
                 ? 'bg-cyan-950/60 border-cyan-500/50 text-cyan-300'
                 : 'bg-slate-800 border-slate-700 text-slate-400'
@@ -130,9 +132,13 @@ export const PassengerPanel: React.FC<PassengerPanelProps> = ({ state, onSOS }) 
           </button>
 
           <button
+            id="passenger-voice-broadcast-btn"
             type="button"
-            onClick={playVoiceAnnouncement}
-            className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-mono transition-colors cursor-pointer flex items-center gap-1"
+            onClick={() => {
+              soundFX.playClick();
+              playVoiceAnnouncement();
+            }}
+            className="px-3 py-1 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1"
           >
             <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
             Play Voice Broadcast

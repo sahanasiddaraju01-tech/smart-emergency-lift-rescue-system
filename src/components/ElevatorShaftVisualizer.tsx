@@ -14,6 +14,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { ElevatorState } from '../types';
+import { soundFX } from '../lib/audio';
 
 interface ElevatorShaftVisualizerProps {
   state: ElevatorState;
@@ -90,8 +91,12 @@ export const ElevatorShaftVisualizer: React.FC<ElevatorShaftVisualizerProps> = (
             return (
               <div
                 key={floor}
-                onClick={() => onFloorSelect && onFloorSelect(floor)}
-                className={`p-2 rounded-lg border transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
+                id={`shaft-floor-select-${floor}`}
+                onClick={() => {
+                  soundFX.playClick();
+                  if (onFloorSelect) onFloorSelect(floor);
+                }}
+                className={`p-2 rounded-lg border transition-all active:scale-95 cursor-pointer flex flex-col items-center justify-center gap-0.5 ${
                   isCarHere
                     ? 'bg-blue-500/20 border-blue-400 text-blue-300 shadow-md shadow-blue-900/30'
                     : 'bg-slate-900/50 border-slate-800/80 hover:border-slate-700 text-slate-400'

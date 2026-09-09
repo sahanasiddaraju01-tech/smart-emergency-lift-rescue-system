@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { ElevatorState, RescueStatus } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
+import { soundFX } from '../lib/audio';
 
 interface RescueTeamPageProps {
   state: ElevatorState;
@@ -150,9 +151,13 @@ export const RescueTeamPage: React.FC<RescueTeamPageProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Button 1: NOTIFY RESCUE TEAM */}
           <button
+            id="rescue-action-notify-btn"
             type="button"
-            onClick={() => onRescueAction('NOTIFY', customNotes || 'Dispatcher flagged on-duty rescue squad.')}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all cursor-pointer ${
+            onClick={() => {
+              soundFX.playAlarm();
+              onRescueAction('NOTIFY', customNotes || 'Dispatcher flagged on-duty rescue squad.');
+            }}
+            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all active:scale-95 cursor-pointer ${
               rescue.rescue_status === 'NOTIFIED'
                 ? 'bg-rose-950/60 border-rose-400 text-rose-300 ring-2 ring-rose-500/40'
                 : 'bg-slate-950 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'
@@ -167,9 +172,13 @@ export const RescueTeamPage: React.FC<RescueTeamPageProps> = ({
 
           {/* Button 2: ACKNOWLEDGE */}
           <button
+            id="rescue-action-ack-btn"
             type="button"
-            onClick={() => onRescueAction('ACKNOWLEDGE', customNotes || 'Squad Captain confirmed receipt of dispatch.')}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all cursor-pointer ${
+            onClick={() => {
+              soundFX.playClick();
+              onRescueAction('ACKNOWLEDGE', customNotes || 'Squad Captain confirmed receipt of dispatch.');
+            }}
+            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all active:scale-95 cursor-pointer ${
               rescue.rescue_status === 'ACKNOWLEDGED'
                 ? 'bg-amber-950/60 border-amber-400 text-amber-300 ring-2 ring-amber-500/40'
                 : 'bg-slate-950 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'
@@ -184,9 +193,13 @@ export const RescueTeamPage: React.FC<RescueTeamPageProps> = ({
 
           {/* Button 3: START RESCUE */}
           <button
+            id="rescue-action-start-btn"
             type="button"
-            onClick={() => onRescueAction('START_RESCUE', customNotes || 'Technicians on hoistway machine deck.')}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all cursor-pointer ${
+            onClick={() => {
+              soundFX.playClick();
+              onRescueAction('START_RESCUE', customNotes || 'Technicians on hoistway machine deck.');
+            }}
+            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all active:scale-95 cursor-pointer ${
               rescue.rescue_status === 'EN_ROUTE' || rescue.rescue_status === 'ON_SITE'
                 ? 'bg-cyan-950/60 border-cyan-400 text-cyan-300 ring-2 ring-cyan-500/40'
                 : 'bg-slate-950 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'
@@ -201,9 +214,13 @@ export const RescueTeamPage: React.FC<RescueTeamPageProps> = ({
 
           {/* Button 4: MARK RESOLVED */}
           <button
+            id="rescue-action-resolve-btn"
             type="button"
-            onClick={() => onRescueAction('MARK_RESOLVED', customNotes || 'All occupants safely evacuated. Clear.')}
-            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all cursor-pointer ${
+            onClick={() => {
+              soundFX.playSafeChime();
+              onRescueAction('MARK_RESOLVED', customNotes || 'All occupants safely evacuated. Clear.');
+            }}
+            className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 font-mono transition-all active:scale-95 cursor-pointer ${
               rescue.rescue_status === 'RESOLVED'
                 ? 'bg-emerald-950/60 border-emerald-400 text-emerald-300 ring-2 ring-emerald-500/40'
                 : 'bg-slate-950 hover:bg-slate-800 text-slate-200 border-slate-800 hover:border-slate-700'

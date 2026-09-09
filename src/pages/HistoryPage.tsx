@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { EmergencyRecord, SystemLog } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
+import { soundFX } from '../lib/audio';
 
 interface HistoryPageProps {
   emergencies: EmergencyRecord[];
@@ -81,19 +82,27 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ emergencies, logs }) =
         <div className="flex items-center gap-3">
           <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-800">
             <button
+              id="history-view-emergencies-btn"
               type="button"
-              onClick={() => setActiveView('emergencies')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer ${
-                activeView === 'emergencies' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              onClick={() => {
+                soundFX.playClick();
+                setActiveView('emergencies');
+              }}
+              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-all active:scale-95 cursor-pointer ${
+                activeView === 'emergencies' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Emergencies ({emergencies.length})
             </button>
             <button
+              id="history-view-logs-btn"
               type="button"
-              onClick={() => setActiveView('logs')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer ${
-                activeView === 'logs' ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              onClick={() => {
+                soundFX.playClick();
+                setActiveView('logs');
+              }}
+              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-all active:scale-95 cursor-pointer ${
+                activeView === 'logs' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               System Logs ({logs.length})
@@ -101,9 +110,13 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ emergencies, logs }) =
           </div>
 
           <button
+            id="history-export-csv-btn"
             type="button"
-            onClick={handleExportCSV}
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
+            onClick={() => {
+              soundFX.playClick();
+              handleExportCSV();
+            }}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 rounded-lg text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-all"
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
             Export CSV

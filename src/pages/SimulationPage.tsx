@@ -15,6 +15,7 @@ import {
 import { ElevatorState } from '../types';
 import { ElevatorShaftVisualizer } from '../components/ElevatorShaftVisualizer';
 import { StatusBadge } from '../components/StatusBadge';
+import { soundFX } from '../lib/audio';
 
 interface SimulationPageProps {
   state: ElevatorState;
@@ -74,9 +75,13 @@ export const SimulationPage: React.FC<SimulationPageProps> = ({
             {[5, 4, 3, 2, 1, 0].map((fl) => (
               <button
                 key={fl}
+                id={`sim-floor-btn-${fl}`}
                 type="button"
-                onClick={() => onFloorMove(fl, false)}
-                className={`py-2 px-3 rounded-lg border font-mono text-xs font-bold transition-all cursor-pointer ${
+                onClick={() => {
+                  soundFX.playClick();
+                  onFloorMove(fl, false);
+                }}
+                className={`py-2 px-3 rounded-lg border font-mono text-xs font-bold transition-all active:scale-95 cursor-pointer ${
                   state.currentFloor === fl && isAligned
                     ? 'bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-900/40'
                     : 'bg-slate-950 hover:bg-slate-800 text-slate-300 border-slate-800'
@@ -89,18 +94,26 @@ export const SimulationPage: React.FC<SimulationPageProps> = ({
 
           <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center gap-3">
             <button
+              id="sim-stop-between-floors-btn"
               type="button"
-              onClick={() => onFloorMove(state.currentFloor, true)}
-              className="px-4 py-2 bg-amber-950/60 hover:bg-amber-900/60 text-amber-300 border border-amber-500/50 rounded-lg text-xs font-mono font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+              onClick={() => {
+                soundFX.playClick();
+                onFloorMove(state.currentFloor, true);
+              }}
+              className="px-4 py-2 bg-amber-950/60 hover:bg-amber-900/60 active:scale-95 text-amber-300 border border-amber-500/50 rounded-lg text-xs font-mono font-semibold flex items-center gap-2 cursor-pointer transition-all"
             >
               <AlertOctagon className="w-4 h-4 text-amber-400" />
               Simulate Stop Between Floors (+520mm Misalignment)
             </button>
 
             <button
+              id="sim-realign-floor-btn"
               type="button"
-              onClick={() => onSensorOverride({ floorAlignment: true, alignmentOffsetMm: 0 })}
-              className="px-4 py-2 bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/50 rounded-lg text-xs font-mono font-semibold flex items-center gap-2 cursor-pointer transition-colors"
+              onClick={() => {
+                soundFX.playClick();
+                onSensorOverride({ floorAlignment: true, alignmentOffsetMm: 0 });
+              }}
+              className="px-4 py-2 bg-emerald-950/60 hover:bg-emerald-900/60 active:scale-95 text-emerald-300 border border-emerald-500/50 rounded-lg text-xs font-mono font-semibold flex items-center gap-2 cursor-pointer transition-all"
             >
               <Sparkles className="w-4 h-4 text-emerald-400" />
               Re-Align Flush with Floor Sill (0mm)

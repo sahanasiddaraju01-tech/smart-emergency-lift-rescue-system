@@ -573,6 +573,13 @@ app.post('/api/simulation/reset', (_req, res) => {
     notes: 'Monitoring telemetry. Rescue station on standby.',
   };
 
+  db.prepare(`
+    UPDATE elevators
+    SET status = ?, current_floor = ?, power_status = ?
+    WHERE id = ?
+  `).run('NORMAL', 2, 'MAIN_ACTIVE', state.id);
+  db.prepare('UPDATE passengers SET passenger_count = ? WHERE elevator_id = ?').run(4, state.id);
+
   logEvent('SIMULATION_RESET', 'Simulation completely reset to baseline normal state.');
   res.json(state);
 });
