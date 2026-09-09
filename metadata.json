@@ -1,0 +1,6 @@
+{
+  "name": "Smart Emergency Lift Rescue System",
+  "description": "Intelligent emergency-management simulation for elevator rescue and controlled dual-door escape route safety.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
